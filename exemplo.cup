@@ -1,12 +1,14 @@
 import java_cup.runtime.*;
 
 terminal Integer INTEIRO;
-terminal MAIS, MENOS, PTVIRG, PARENTESQ, PARENTDIR;
+terminal MAIS, MENOS, MULT, DIV, RESTO, POT, PTVIRG, PARENTESQ, PARENTDIR;
 
 non terminal inicio;
 non terminal Integer expr;
 
 precedence left MAIS, MENOS;
+precedence left MULT, DIV, RESTO;     // adicionado precedencia para mult, div e resto
+precedence right POT;                 // adicionado precedencia para potenciacao
 
 start with inicio;
 
@@ -15,6 +17,10 @@ inicio ::= expr:e PTVIRG {: System.out.println(e); :}
 
 expr ::= expr:a MAIS expr:b         {: RESULT = a.intValue() + b.intValue(); :}
        | expr:a MENOS expr:b        {: RESULT = a.intValue() - b.intValue(); :}
+       | expr:a MULT expr:b         {: RESULT = a.intValue() * b.intValue(); :}                   // adicionado suporte para multiplicacao
+       | expr:a DIV expr:b          {: RESULT = a.intValue() / b.intValue(); :}                   // adicionado suporte para divisao
+       | expr:a RESTO expr:b        {: RESULT = a.intValue() % b.intValue(); :}                   // adicionado suporte para resto da divisao
+       | expr:a POT expr:b          {: RESULT = (int)Math.pow(a.intValue(), b.intValue()); :}     // adicionado suporte para potenciacao
        | PARENTESQ expr:a PARENTDIR {: RESULT = a.intValue(); :}
        | INTEIRO:a                  {: RESULT = a.intValue(); :}
        ;
